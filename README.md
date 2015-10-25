@@ -14,3 +14,10 @@ A way for getting content for artfunknet
 ### Run
 
 `node selenium.js`
+
+### ToDo
+
+- [ ] Wait for click event to finish
+- [ ] Parse art information
+- [ ] Store picture
+- [ ] Import data into mongodb
