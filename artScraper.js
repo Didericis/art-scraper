@@ -1,4 +1,5 @@
 var webdriver = require('selenium-webdriver');
+var until = webdriver.until;
 
 var driver = new webdriver.Builder().
 
@@ -9,10 +10,10 @@ driver.findElements(webdriver.By.css('.damDownloadLink > .downloadIcon')).then(f
     btns.forEach(function(btn, i){
         if (i==0) {
             btn.click().then(function(){
-                console.log('Done clicking button');
+                driver.wait(until.elementLocated({id: 'damDownloadButton'}), 10000).then(function(){
+                    console.log('WOOT');
+                });
             });
         }
     });
 });
-
-driver.quit();

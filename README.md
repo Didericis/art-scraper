@@ -17,7 +17,7 @@ A way for getting content for artfunknet
 
 ### ToDo
 
-- [ ] Figure out how to wait for result of click event
+- [x] Figure out how to wait for result of click event
 - [ ] Parse art information
 - [ ] Store picture
 - [ ] Import data into mongodb
