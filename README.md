@@ -13,7 +13,7 @@ A way for getting content for artfunknet
 
 ### Run
 
-`node selenium.js`
+`node artScraper.js`
 
 ### ToDo
 
