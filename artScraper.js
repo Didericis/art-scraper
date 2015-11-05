@@ -7,8 +7,11 @@ var artInfo = {};
 var driver = new webdriver.Builder().withCapabilities(webdriver.Capabilities.chrome()).build();
 var startingNum = 18392;
 var numDownloaded = 0;
-var numToDownload = 2000;
+var numParsed = 0;
+var numToDownload = 20;
 var downloadPath = '/Users/eric/Downloads/';
+var saveName = 'artfunkelImport.json';
+var savePath = path.join(downloadPath, saveName);
 var promiseChain;
 
 for (var artID=startingNum; artID<(startingNum+numToDownload); artID++) {
@@ -19,10 +22,12 @@ for (var artID=startingNum; artID<(startingNum+numToDownload); artID++) {
     }
 }
 promiseChain.then(function(){
-    fs.writeFile(path.join(downloadPath, 'artfunkelImport.json'), JSON.stringify(artInfo, null, 4), function(err, file){
-        console.log('Done!');
-    });
+    save();
 });
+
+function save(){
+    fs.writeFile(savePath, JSON.stringify(artInfo, null, 4));    
+}
 
 function getArtCallback(artID){
     var _artID = artID;
@@ -35,6 +40,7 @@ function getArtCallback(artID){
 function getArtPromise(artID){
     var _artID = artID;
     var _artAttributes;
+    numParsed += 1;
 
     return driver.get(getURL(_artID)).then(function(){
         return getAllArtAttributes();
@@ -47,7 +53,10 @@ function getArtPromise(artID){
                 _artAttributes.fileName = fileName;
                 artInfo[_artID] = _artAttributes;
                 numDownloaded += 1;
-                console.log(numDownloaded + '/' + numToDownload);
+                console.log(numDownloaded);
+                if ((numDownloaded % 10) == 0) {
+                    save();
+                }
                 watcher.close();
             }
         });
