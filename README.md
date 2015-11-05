@@ -18,6 +18,6 @@ A way for getting content for artfunknet
 ### ToDo
 
 - [x] Figure out how to wait for result of click event
-- [ ] Parse art information
-- [ ] Store picture
+- [x] Parse art information
+- [x] Store picture
 - [ ] Import data into mongodb
