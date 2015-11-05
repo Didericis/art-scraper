@@ -2,19 +2,29 @@ var webdriver = require('selenium-webdriver');
 var fs = require('fs');
 var path = require('path');
 var statusBar = require('status-bar');
+var commandLineArgs = require('command-line-args');
 var until = webdriver.until;
 
 var artInfo = {};
 var driver = new webdriver.Builder().withCapabilities(webdriver.Capabilities.chrome()).build();
-var startingNum = 18392;
-var numDownloaded = 0;
-var numParsed = 0;
-var numToDownload = 20;
-var downloadPath = '/Users/eric/Downloads/';
+var cli = commandLineArgs([
+    {name: 'path', alias: 'p', type: String},
+    {name: 'number', alias: 'n', type: Number},
+    {name: 'starting', alias: 's', type: Number},
+    {name: 'exclude', alias: 'e', type: Number, multiple: true}
+]);
+var options = cli.parse();
+var startingNum = options.starting || 18392;
+var numToDownload = options.number || 20;
+var downloadPath = getDloadPath(options.path);
 var saveName = 'artfunkelImport.json';
 var savePath = path.join(downloadPath, saveName);
-var promiseChain;
+var numDownloaded = 0;
+var numParsed = 0;
 var bar = createStatusBar();
+var promiseChain;
+
+main();
 
 function main(){
     for (var artID=startingNum; artID<(startingNum+numToDownload); artID++) {
@@ -27,8 +37,19 @@ function main(){
     promiseChain.then(function(){
         save();
         bar.cancel();
-        console.log('Done!');
+        driver.quit();
+        process.stdout.write('\n  Done!\n');
     });
+}
+
+function getDloadPath(path){
+    if (!path){
+        console.log('Must specify path of browser downloads. \n' + 
+                    '   EX: node artScraper.js -p [path]');
+        process.exit();
+    } else {
+        return path;
+    }
 }
 
 function createStatusBar(){
@@ -37,7 +58,7 @@ function createStatusBar(){
     }).on('render', function(){
         var percentage = numParsed / numToDownload;
         process.stdout.write(
-            ' Downloaded: ' + numDownloaded + ' [' +
+            '  Downloaded: ' + numDownloaded + ' [' +
             this.format.progressBar(percentage) + '] ' +
             this.format.percentage(percentage));
         process.stdout.cursorTo(0);
