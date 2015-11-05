@@ -1,6 +1,7 @@
 var webdriver = require('selenium-webdriver');
 var fs = require('fs');
 var path = require('path');
+var statusBar = require('status-bar');
 var until = webdriver.until;
 
 var artInfo = {};
@@ -13,17 +14,35 @@ var downloadPath = '/Users/eric/Downloads/';
 var saveName = 'artfunkelImport.json';
 var savePath = path.join(downloadPath, saveName);
 var promiseChain;
+var bar = createStatusBar();
 
-for (var artID=startingNum; artID<(startingNum+numToDownload); artID++) {
-    if (!promiseChain) {
-        promiseChain = getArtPromise(artID);
-    } else {
-        promiseChain = promiseChain.then(getArtCallback(artID));
+function main(){
+    for (var artID=startingNum; artID<(startingNum+numToDownload); artID++) {
+        if (!promiseChain) {
+            promiseChain = getArtPromise(artID);
+        } else {
+            promiseChain = promiseChain.then(getArtCallback(artID));
+        }
     }
+    promiseChain.then(function(){
+        save();
+        bar.cancel();
+        console.log('Done!');
+    });
 }
-promiseChain.then(function(){
-    save();
-});
+
+function createStatusBar(){
+    return statusBar.create({ 
+        total: 1 
+    }).on('render', function(){
+        var percentage = numParsed / numToDownload;
+        process.stdout.write(
+            ' Downloaded: ' + numDownloaded + ' [' +
+            this.format.progressBar(percentage) + '] ' +
+            this.format.percentage(percentage));
+        process.stdout.cursorTo(0);
+    });    
+}
 
 function save(){
     fs.writeFile(savePath, JSON.stringify(artInfo, null, 4));    
@@ -53,7 +72,6 @@ function getArtPromise(artID){
                 _artAttributes.fileName = fileName;
                 artInfo[_artID] = _artAttributes;
                 numDownloaded += 1;
-                console.log(numDownloaded);
                 if ((numDownloaded % 10) == 0) {
                     save();
                 }
