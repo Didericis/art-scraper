@@ -19,10 +19,10 @@ A way for getting content for artfunknet
 
 Option            | Optional     | Type     | Description
 ---               | ---          | ---      | ---
-`-p`, `--path`    | No           | `String` | `Path to browser download location`
-`-n`, `--number`  | Yes          | `Boolean`| `Number of art pieces to download`
-`-s`, `--starting`| Yes          | `Number` | `Starting id of art piece`
-`-e`, `--exculde` | Yes          | `Numbers`| `Art piece ids to exclude`
+`-p`, `--path`    | `No`         | `String` | `Path to browser download location`
+`-n`, `--number`  | `Yes`        | `Boolean`| `Number of art pieces to download`
+`-s`, `--starting`| `Yes`        | `Number` | `Starting id of art piece`
+`-e`, `--exculde` | `Yes`        | `Numbers`| `Art piece ids to exclude`
 
 ### ToDo
 
