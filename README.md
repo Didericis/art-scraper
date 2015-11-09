@@ -5,6 +5,7 @@ A way for getting content for artfunknet
 
 * Chrome
 * Selenium driver - [download](https://sites.google.com/a/chromium.org/chromedriver/downloads)
+* node & npm
 
 ### Installation
 
